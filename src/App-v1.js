@@ -33,15 +33,19 @@ function formatDay(dateStr) {
 }
 
 class ClassyWeather extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    location: "Lisbon",
-    isLoading: false,
-    displayLocation: "",
-    weather: {},
-  };
+    this.state = {
+      location: "Lisbon",
+      isLoading: false,
+      displayLocation: "",
+      weather: {},
+    };
+    this.fetchWeater = this.fetchWeater.bind(this);
+  }
 
-  fetchWeater = async () => {
+  async fetchWeater() {
     try {
       // 1) Getting location (geocoding)
       this.setState({ isLoading: true });
