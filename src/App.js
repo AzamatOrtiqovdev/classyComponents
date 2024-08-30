@@ -88,7 +88,7 @@ class ClassyWeather extends React.Component {
           onChange={(e) => this.setState({ location: e.target.value })}
         />
 
-        <button onClick={this.fetchWeater}>Get Weather</button>
+        <button onClick={this.fetchWeater} className="getWeatherBtn">Get Weather</button>
 
         {this.state.isLoading && <p className="loader">Loading .... </p>}
         {this.state.weather.weathercode && (
