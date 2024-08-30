@@ -33,7 +33,6 @@ function formatDay(dateStr) {
 }
 
 class ClassyWeather extends React.Component {
-
   state = {
     location: "Lisbon",
     isLoading: false,
@@ -71,20 +70,20 @@ class ClassyWeather extends React.Component {
     } finally {
       this.setState({ isLoading: false });
     }
-  }
+  };
+
+  setLocation = (e) => this.setState({ location: e.target.value })
 
   render() {
     return (
       <div className="app">
         <h1>Classy Weather</h1>
-        <input
-          type="text"
-          placeholder="Search From Location"
-          value={this.state.location}
-          onChange={(e) => this.setState({ location: e.target.value })}
-        />
 
-        <button onClick={this.fetchWeater} className="getWeatherBtn">Get Weather</button>
+        <Input location={this.state.location} onChangeLocation = {this.setLocation}/>
+
+        <button onClick={this.fetchWeater} className="getWeatherBtn">
+          Get Weather
+        </button>
 
         {this.state.isLoading && <p className="loader">Loading .... </p>}
         {this.state.weather.weathercode && (
@@ -99,6 +98,19 @@ class ClassyWeather extends React.Component {
 }
 
 export default ClassyWeather;
+
+class Input extends React.Component {
+  render() {
+    return (
+      <input
+        type="text"
+        placeholder="Search From Location"
+        value={this.location}
+        onChange={this.onChangeLocation}
+      />
+    );
+  }
+}
 
 class Weather extends React.Component {
   render() {
@@ -136,11 +148,15 @@ class Day extends React.Component {
   render() {
     const { date, max, min, code, isToday } = this.props;
 
-    return <li className="day">
-      <span>{getWeatherIcon(code)}</span>
-      <p>{isToday ? "Today" : formatDay(date)}</p>
-      <p>{Math.ceil(min)}&deg; &mdash; <strong>{Math.floor(max)}&deg;</strong></p>
-      <p></p>
-    </li>;
+    return (
+      <li className="day">
+        <span>{getWeatherIcon(code)}</span>
+        <p>{isToday ? "Today" : formatDay(date)}</p>
+        <p>
+          {Math.ceil(min)}&deg; &mdash; <strong>{Math.floor(max)}&deg;</strong>
+        </p>
+        <p></p>
+      </li>
+    );
   }
 }
