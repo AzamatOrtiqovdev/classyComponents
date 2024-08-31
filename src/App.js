@@ -34,13 +34,14 @@ function formatDay(dateStr) {
 
 class ClassyWeather extends React.Component {
   state = {
-    location: "Lisbon",
+    location: "",
     isLoading: false,
     displayLocation: "",
     weather: {},
   };
 
   fetchWeater = async () => {
+    if(this.state.location.length < 2) return this.setState({weather: {}});
     try {
       // 1) Getting location (geocoding)
       this.setState({ isLoading: true });
@@ -66,24 +67,38 @@ class ClassyWeather extends React.Component {
       const weatherData = await weatherRes.json();
       this.setState({ weather: weatherData.daily });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
-  setLocation = (e) => this.setState({ location: e.target.value })
+  setLocation = (e) => this.setState({ location: e.target.value });
+
+  // useEffect []
+  componentDidMount() {
+    // this.fetchWeater()
+    this.setState({location: localStorage.getItem("location") || ""})
+  }
+
+  // useEffect [location]
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.location !== prevState.location) {
+      this.fetchWeater();
+
+      localStorage.setItem("location", this.state.location)
+    }
+  }
 
   render() {
     return (
       <div className="app">
         <h1>Classy Weather</h1>
 
-        <Input location={this.state.location} onChangeLocation = {this.setLocation}/>
-
-        <button onClick={this.fetchWeater} className="getWeatherBtn">
-          Get Weather
-        </button>
+        <Input
+          location={this.state.location}
+          onChangeLocation={this.setLocation}
+        />
 
         {this.state.isLoading && <p className="loader">Loading .... </p>}
         {this.state.weather.weathercode && (
@@ -106,7 +121,7 @@ class Input extends React.Component {
         type="text"
         placeholder="Search From Location"
         value={this.location}
-        onChange={this.onChangeLocation}
+        onChange={this.props.onChangeLocation}
       />
     );
   }
